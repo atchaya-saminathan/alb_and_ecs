@@ -41,13 +41,25 @@ module "alb" {
       }
     }
    ]
+  https_listeners = [
+    {
+      port = 443
+      protocol = "HTTPS"
+      certificate_arn = data.aws_acm_certificate.issued.arn
+      target_group_index = 0
+    }
+  ]
   http_tcp_listeners = [
     {
       port               = 80
       protocol           = "HTTP"
-      target_group_index = 0
-      action_type        = "forward"
-    }
+      action_type        = "redirect"
+      redirect = {
+        port = 443
+        protocol = "HTTPS"
+        status_code = "HTTP_301"
+      }
+    } 
   ]
 }
 
