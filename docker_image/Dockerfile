@@ -1,7 +1,7 @@
 FROM centos:centos7
 MAINTAINER Atchaya
 RUN yum -y update && \
-  yum -y install httpd json python && \
+  yum -y install httpd awscli json python && \
   yum clean all
 COPY index.html /var/www/html/index.html
 COPY entry_point.py entry_point.py
