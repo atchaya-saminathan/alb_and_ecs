@@ -4,7 +4,7 @@ module "ecs_security_group2" {
   name    = "ecs_task2"
   description = "SG for ECS tasks"
   vpc_id = module.vpc2.vpc_id
-  ingress_cidr_blocks = ["10.0.1.0/24","10.0.2.0/24","10.3.0.0/16"]
+  ingress_cidr_blocks = ["10.0.0.0/16","10.3.0.0/16"]
   ingress_rules = ["http-80-tcp"]
   egress_rules = ["all-all"]
 }

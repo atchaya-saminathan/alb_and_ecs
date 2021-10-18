@@ -57,7 +57,7 @@ module "private-alb-security-group" {
   name    = "alb"
   description = "SG for iprivate ALB"
   vpc_id = module.vpc2.vpc_id
-  ingress_cidr_blocks = ["10.1.0.0/16","10.3.0.0/16"]
+  ingress_cidr_blocks = ["10.0.0.0/16","10.3.0.0/16"]
   ingress_rules = ["http-80-tcp"]
   egress_rules = ["all-all"]
 }

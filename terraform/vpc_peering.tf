@@ -15,3 +15,8 @@ resource "aws_route" "service1" {
   vpc_peering_connection_id = aws_vpc_peering_connection.peering.id
 }
 
+resource "aws_route" "service2" {
+  route_table_id            = module.vpc2.private_route_table_ids[0]
+  destination_cidr_block  = "10.0.0.0/16"
+  vpc_peering_connection_id = aws_vpc_peering_connection.peering.id
+}
