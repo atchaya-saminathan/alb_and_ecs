@@ -64,7 +64,7 @@ resource "aws_ecs_service" "service" {
   name            = "zoominfo_service"
   cluster         = module.ecs.ecs_cluster_arn
   task_definition = aws_ecs_task_definition.task_definition.arn
-  desired_count   = 2
+  desired_count   = 1
 #  iam_role        = data.aws_iam_role.ecs_role.arn
   deployment_maximum_percent = 200
   deployment_minimum_healthy_percent = 100 
@@ -86,4 +86,29 @@ resource "aws_ecs_service" "service" {
  }
 }
 
+resource "aws_appautoscaling_target" "autoscaling" {
+  max_capacity       = 3
+  min_capacity       = 1
+  resource_id        = "service/${module.ecs.ecs_cluster_name}/${aws_ecs_service.service.name}"
+  scalable_dimension = "ecs:service:DesiredCount"
+  service_namespace  = "ecs"
+}
 
+resource "aws_appautoscaling_policy" "request" {
+  name               = "request-auto-scaling"
+  service_namespace  = aws_appautoscaling_target.autoscaling.service_namespace
+  scalable_dimension = aws_appautoscaling_target.autoscaling.scalable_dimension
+  resource_id        = aws_appautoscaling_target.autoscaling.resource_id
+  policy_type        = "TargetTrackingScaling"
+
+  target_tracking_scaling_policy_configuration {
+    predefined_metric_specification {
+      predefined_metric_type = "ALBRequestCountPerTarget"
+      resource_label         = "${module.alb.lb_arn_suffix}/${module.alb.target_group_arn_suffixes[0]}"
+    }
+
+    target_value       = 75
+    scale_in_cooldown  = 60
+    scale_out_cooldown = 60
+  }
+}

@@ -41,6 +41,7 @@ module "alb" {
       }
     }
    ]
+/*
   https_listeners = [
     {
       port = 443
@@ -60,6 +61,15 @@ module "alb" {
         status_code = "HTTP_301"
       }
     } 
+  ]
+*/
+  http_tcp_listeners = [
+    {
+      port               = 80
+      protocol           = "HTTP"
+      action_type        = "forward"
+      target_group_index = 0
+    }
   ]
 }
 
